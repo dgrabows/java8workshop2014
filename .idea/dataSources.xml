@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="2467955805">
+    <data-source source="LOCAL" name="Data Source" product="Oracle" version="Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production&#10;With the Partitioning, OLAP, Data Mining and Real Application Testing options" jdbc-version="11.2" driver-name="Oracle JDBC driver" driver-version="11.2.0.3.0" uuid="3ed05174-3de8-41c1-bbd8-d240f586986c">
+      <extra-name-characters>$#</extra-name-characters>
+      <identifier-quote-string>&quot;</identifier-quote-string>
+      <synchronize>true</synchronize>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@//dbsrv22:1521/PXDEV1</jdbc-url>
+      <user-name>jrobb</user-name>
+      <user-password>dfe4dfc5dfc8dfcfdfc6dfc6dfc3dfdfdfc7df9bdf9adf98</user-password>
+      <libraries>
+        <library>
+          <url>jar://$PROJECT_DIR$/../lib/ojdbc6-11.2.0.4.jar!/</url>
+        </library>
+        <library>
+          <url>jar://$PROJECT_DIR$/../lib/xdb6-11.2.0.4.jar!/</url>
+        </library>
+        <library>
+          <url>jar://$PROJECT_DIR$/../lib/xmlparserv2.jar!/</url>
+        </library>
+        <library>
+          <url>file://$PROJECT_DIR$/../lib/oracle-driver-license.txt</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+
