@@ -39,8 +39,6 @@ package com.vertafore.jakerobb.java8workshop2014.java7.forkjoinpool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
-import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
@@ -88,20 +86,22 @@ public class MaximumFinder extends RecursiveTask<Integer> {
     }
 
     public static void main(String[] args) {
-        // create a random data set
-        final Integer[] data = new Integer[1000];
-        final Random random = new SecureRandom();
-        for (int i = 0; i < data.length; i++) {
-            data[i] = random.nextInt(100);
-        }
-
         // create a thread pool
         final ForkJoinPool pool = new ForkJoinPool(4);
 
+        // create a random data set
+        long start = System.nanoTime();
+        Integer[] data = pool.invoke(new RandomDataGenerator(1000));
+        long dataGenerated = System.nanoTime();
+
         // find the maximum
         Integer maximum = pool.invoke(new MaximumFinder(data));
+        long end = System.nanoTime();
+
+        // log result and stats
         LOG.info(maximum.toString());
+        LOG.info(String.format("%d ns to generate data", dataGenerated - start));
+        LOG.info(String.format("%d ns to find maximum", end - dataGenerated));
     }
 }
 
-//        Integer[] data = pool.invoke(new RandomDataGenerator(1000));

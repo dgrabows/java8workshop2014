@@ -92,10 +92,17 @@ public class MaximumFinder extends RecursiveTask<Integer> {
         final ForkJoinPool pool = ForkJoinPool.commonPool();
 
         // create a random data set
+        long start = System.nanoTime();
         Integer[] data = pool.invoke(new RandomDataGenerator(1000));
+        long dataGenerated = System.nanoTime();
 
         // find the maximum
         Integer maximum = pool.invoke(new MaximumFinder(data));
+        long end = System.nanoTime();
+
+        // log result and stats
         LOG.info(maximum.toString());
+        LOG.info(String.format("%d ns to generate data", dataGenerated - start));
+        LOG.info(String.format("%d ns to find maximum", end - dataGenerated));
     }
 }
