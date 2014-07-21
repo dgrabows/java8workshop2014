@@ -45,32 +45,32 @@ import java.util.concurrent.RecursiveTask;
 public class MaximumFinder extends RecursiveTask<Integer> {
     private static final Logger LOG = LoggerFactory.getLogger(MaximumFinder.class);
 
-    private static final int SEQUENTIAL_THRESHOLD = 5;
-
     private final Integer[] data;
     private final int start;
     private final int end;
+    private final int sequentialThreshold;
 
-    public MaximumFinder(Integer[] data, int start, int end) {
+    public MaximumFinder(Integer[] data, int start, int end, int sequentialThreshold) {
         this.data = data;
         this.start = start;
         this.end = end;
+        this.sequentialThreshold = sequentialThreshold;
     }
 
-    public MaximumFinder(Integer[] data) {
-        this(data, 0, data.length);
+    public MaximumFinder(Integer[] data, int sequentialThreshold) {
+        this(data, 0, data.length, sequentialThreshold);
     }
 
     @Override
     protected Integer compute() {
         final int length = end - start;
-        if (length < SEQUENTIAL_THRESHOLD) {
+        if (length < sequentialThreshold) {
             return computeDirectly();
         }
         final int split = length / 2;
-        final MaximumFinder left = new MaximumFinder(data, start, start + split);
+        final MaximumFinder left = new MaximumFinder(data, start, start + split, sequentialThreshold);
         left.fork();
-        final MaximumFinder right = new MaximumFinder(data, start + split, end);
+        final MaximumFinder right = new MaximumFinder(data, start + split, end, sequentialThreshold);
         return Math.max(right.compute(), left.join());
     }
 
@@ -86,22 +86,26 @@ public class MaximumFinder extends RecursiveTask<Integer> {
     }
 
     public static void main(String[] args) {
+        // tuning parameter
+        int sequentialThreshold = 50000;
+
         // create a thread pool
-        final ForkJoinPool pool = new ForkJoinPool(4);
+        final ForkJoinPool pool = new ForkJoinPool(100);
 
         // create a random data set
         long start = System.nanoTime();
-        Integer[] data = pool.invoke(new RandomDataGenerator(1000));
+        Integer[] data = pool.invoke(new RandomDataGenerator(1000000, sequentialThreshold));
         long dataGenerated = System.nanoTime();
 
         // find the maximum
-        Integer maximum = pool.invoke(new MaximumFinder(data));
+        Integer maximum = pool.invoke(new MaximumFinder(data, sequentialThreshold));
         long end = System.nanoTime();
 
         // log result and stats
-        LOG.info(maximum.toString());
-        LOG.info(String.format("%d ns to generate data", dataGenerated - start));
-        LOG.info(String.format("%d ns to find maximum", end - dataGenerated));
+        LOG.info(String.format("Maximum is %d", maximum));
+        LOG.info(String.format("%.3f ms to generate data", (dataGenerated - start) / 1000000.0));
+        LOG.info(String.format("%.3f ms to find maximum", (end - dataGenerated) / 1000000.0));
+        LOG.info(String.format("%.3f ms total", (end - start) / 1000000.0));
     }
 }
 

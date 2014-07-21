@@ -40,32 +40,29 @@ import com.google.common.collect.ObjectArrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
-import java.util.Random;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomDataGenerator extends RecursiveTask<Integer[]> {
     private static final Logger LOG = LoggerFactory.getLogger(RandomDataGenerator.class);
 
-    private static final int SEQUENTIAL_THRESHOLD = 100;
-
     private final int numRequested;
+    private final int sequentialThreshold;
 
-    public RandomDataGenerator(int numRequested) {
+    public RandomDataGenerator(int numRequested, int sequentialThreshold) {
         this.numRequested = numRequested;
+        this.sequentialThreshold = sequentialThreshold;
     }
 
     @Override
     protected Integer[] compute() {
-        if (numRequested <= SEQUENTIAL_THRESHOLD) {
+        if (numRequested <= sequentialThreshold) {
             return computeDirectly();
         }
         final int split = numRequested / 2;
-        final RandomDataGenerator left = new RandomDataGenerator(split);
+        final RandomDataGenerator left = new RandomDataGenerator(split, sequentialThreshold);
         left.fork();
-        final RandomDataGenerator right = new RandomDataGenerator(numRequested - split);
+        final RandomDataGenerator right = new RandomDataGenerator(numRequested - split, sequentialThreshold);
         return ObjectArrays.concat(right.compute(), left.join(), Integer.class);
     }
 
@@ -77,19 +74,4 @@ public class RandomDataGenerator extends RecursiveTask<Integer[]> {
         }
         return data;
     }
-
-    public static void main(String[] args) {
-        // create a random data set
-        final Integer[] data = new Integer[1000];
-        final Random random = new SecureRandom();
-        for (int i = 0; i < data.length; i++) {
-            data[i] = random.nextInt(100);
-        }
-
-        // submit the task to the pool
-        final ForkJoinPool pool = new ForkJoinPool(4);
-        final MaximumFinder finder = new MaximumFinder(data);
-        LOG.info(pool.invoke(finder).toString());
-    }
-
 }
