@@ -54,9 +54,9 @@ public class NumberCruncher {
         File inputFile = new File("randomnumbers");
         IntSupplier inputDataSource = new FromFileIntSupplier(inputFile);
         IntStream inputData = IntStream.generate(inputDataSource).limit(100000);
+
+        // todo: replace this with code that does actual work
         inputData.forEach(System.out::println);
+
     }
-
-    ;
-
 }
