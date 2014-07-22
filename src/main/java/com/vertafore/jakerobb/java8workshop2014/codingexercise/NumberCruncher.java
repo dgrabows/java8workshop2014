@@ -37,6 +37,8 @@
 package com.vertafore.jakerobb.java8workshop2014.codingexercise;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.OptionalDouble;
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 
@@ -51,12 +53,17 @@ import java.util.stream.IntStream;
  */
 public class NumberCruncher {
     public static void main(String[] args) throws Exception {
+        double average = createFileStream().average().getAsDouble();
+        System.out.println(String.format("Average: %3f", average));
+        double minDifference = createFileStream().mapToDouble(i -> Math.abs(average - i)).min().getAsDouble();
+        System.out.println(String.format("Closest (approximate): %3f or %3f", average - minDifference, average + minDifference));
+        System.out.print("Closest: ");
+        createFileStream().filter(i -> Math.abs(average - i) == minDifference).forEach(System.out::println);
+    }
+
+    private static IntStream createFileStream() throws IOException {
         File inputFile = new File("randomnumbers");
         IntSupplier inputDataSource = new FromFileIntSupplier(inputFile);
-        IntStream inputData = IntStream.generate(inputDataSource).limit(100000);
-
-        // todo: replace this with code that does actual work
-        inputData.forEach(System.out::println);
-
+        return IntStream.generate(inputDataSource).limit(100000);
     }
 }
