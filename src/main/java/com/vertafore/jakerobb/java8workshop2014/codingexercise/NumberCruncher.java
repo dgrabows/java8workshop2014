@@ -56,9 +56,7 @@ public class NumberCruncher {
         IntStream inputData = IntStream.generate(inputDataSource).limit(100000);
 
         // todo: replace this with code that does actual work
-        inputData.forEach();
-
-
+        inputData.forEach(System.out::println);
 
     }
 }
