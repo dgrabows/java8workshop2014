@@ -122,12 +122,26 @@ public class PeoplePrinter {
         }
     }
 
+    public static void eligibleForSelectiveService51(Iterable<Person> roster) {
+        processPersons(roster,
+                       p -> p.getGender() == Person.Sex.MALE
+                            && p.getAge() >= 18
+                            && p.getAge() <= 25,
+                       new Consumer<Person>() {
+                           @Override
+                           public void accept(Person person) {
+                               person.printPerson();
+                           }
+                       }
+        );
+    }
+
     public static void eligibleForSelectiveService5(Iterable<Person> roster) {
         processPersons(roster,
                        p -> p.getGender() == Person.Sex.MALE
                             && p.getAge() >= 18
                             && p.getAge() <= 25,
-                       p -> p.printPerson()
+                       person -> person.printPerson()
         );
     }
 
@@ -153,5 +167,25 @@ public class PeoplePrinter {
                                             && p.getAge() <= 25)
                                .forEach(Person::printPerson);
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
