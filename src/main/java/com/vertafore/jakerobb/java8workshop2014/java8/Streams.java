@@ -91,9 +91,11 @@ public class Streams {
         Set<Integer> myFilteredSet = IntStream.range(1,10).filter(LESS_THAN_FIVE_PRIMITIVE).boxed().collect(Collectors.toSet());
         Set<Integer> myFilteredSet2 = IntStream.range(1,10).boxed().filter(LESS_THAN_FIVE).collect(Collectors.toSet());
 
+        // lambdas
         // StreamBuilders - accept vs. add, Consumers
         // Spliterators
         // Suppliers / Generators
+        // forEach
 
     }
 
