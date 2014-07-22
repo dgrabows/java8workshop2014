@@ -44,12 +44,10 @@ import java.io.IOException;
 import java.util.function.IntSupplier;
 
 /**
-* todo: Enter class comments
-*
-* @author jrobb
-* @version $Id$
-*/
-class FromFileIntSupplier implements IntSupplier {
+ * @author jrobb
+ * @version $Id$
+ */
+public class FromFileIntSupplier implements IntSupplier {
     private final BufferedReader reader;
 
     FromFileIntSupplier(File inputFile) throws IOException {
