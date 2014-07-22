@@ -36,9 +36,65 @@
  */
 package com.vertafore.jakerobb.java8workshop2014.java8;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+import java.util.Set;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /**
  * @author jrobb
  * @version $Id$
  */
 public class Streams {
+
+    private static final Predicate<Integer> LESS_THAN_FIVE = new Predicate<Integer>() {
+        /**
+         * Evaluates this predicate on the given argument.
+         *
+         * @param input the input argument
+         *
+         * @return {@code true} if the input argument matches the predicate,
+         *         otherwise {@code false}
+         */
+        @Override
+        public boolean test(Integer input) {
+            return input < 5;
+        }
+    };
+
+    public void fromList() {
+        List<Integer> myList = ImmutableList.of(1,2,3,4,5,6,7,8,9,10);
+        List<Integer> myFilteredList = myList.stream().filter(LESS_THAN_FIVE).collect(Collectors.toList());
+    }
+
+    private static final IntPredicate LESS_THAN_FIVE_PRIMITIVE = new IntPredicate() {
+        /**
+         * Evaluates this predicate on the given argument.
+         *
+         * @param value the input argument
+         *
+         * @return {@code true} if the input argument matches the predicate,
+         *         otherwise {@code false}
+         */
+        @Override
+        public boolean test(int value) {
+            return value < 5;
+        }
+    };
+
+    public void intStream() {
+        int[] filteredArray = IntStream.range(1,10).filter(LESS_THAN_FIVE_PRIMITIVE).toArray();
+        Set<Integer> myFilteredSet = IntStream.range(1,10).filter(LESS_THAN_FIVE_PRIMITIVE).boxed().collect(Collectors.toSet());
+        Set<Integer> myFilteredSet2 = IntStream.range(1,10).boxed().filter(LESS_THAN_FIVE).collect(Collectors.toSet());
+
+        // StreamBuilders - accept vs. add, Consumers
+        // Spliterators
+        // Suppliers / Generators
+
+    }
+
 }
