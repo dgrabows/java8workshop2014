@@ -36,6 +36,14 @@
  */
 package com.vertafore.jakerobb.java8workshop2014.codingexercise;
 
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.function.IntSupplier;
+import java.util.stream.IntStream;
+
 /**
  * Uses Java8 lambdas and concurrent processing to
  * * load a text file of numbers
@@ -46,7 +54,36 @@ package com.vertafore.jakerobb.java8workshop2014.codingexercise;
  * @version $Id$
  */
 public class NumberCruncher {
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws Exception {
+        File inputFile = new File("randomnumbers");
+        IntSupplier inputDataSource = new FromFileIntSupplier(inputFile);
+        IntStream inputData = IntStream.generate(inputDataSource).limit(100000);
+        inputData.forEach(System.out::println);
     }
+
+    private static class FromFileIntSupplier implements IntSupplier {
+        private final BufferedReader reader;
+
+        FromFileIntSupplier(File inputFile) throws IOException {
+            reader = new BufferedReader(new FileReader(inputFile));
+        }
+        /**
+         * Gets a result.
+         *
+         * @return a result
+         */
+        @Override
+        public int getAsInt() {
+            try {
+                String line = reader.readLine();
+                if (line == null) {
+                    throw new EOFException("End of file.");
+                }
+                return Integer.parseInt(line);
+            } catch (IOException e) {
+                throw new RuntimeException("Problem reading file.", e);
+            }
+        }
+    };
+
 }
